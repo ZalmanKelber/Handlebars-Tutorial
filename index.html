@@ -4,6 +4,11 @@
 <html>
 <head>
   <title>Hello Handlebars</title>
+  <style type="text/css">
+    .redText {color:red;}
+    .blueText {color:blue;}
+    .greenText {color:green;}
+  </style>
 
   <!-- You can download Handlebars at http:// handlebarsjs.com/ and save it as handlebars-v4.0.2.js on your site. Then make it available by adding the following line. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
@@ -19,23 +24,79 @@
 
 <body>
 <!-- The information will be placed in this div -->
-  <div id="gabyData"></div>
+  <div id="quoteData"></div>
 
-  <script type="text/javascript">
+  <script id="quoteTemplate" type="text/x-handlebars-template">
+    <h3>Top {{name}} Quotes</h3>
+    <ol>
+        {{#each quotes}}
+        <li>
+            {{quote}}
+        </li>
+        {{/each}}
+    </ol>
+    {{{poppeaBio}}}
+    <br />
+    <br />
+    {{makeLink "Poppea Recording" "https://youtu.be/9en2t2kR-M8"}}
+    <br />
+    <br />
+    {{changeColor "Change text to red" color="green"}}
+    <br />
+    <br />
+    {{sayHello}}
+  </script>
 
-  // Structure how I want the data to dynamically be
-  // placed by defining the keys in between {{}}
-  var myInfo = "<p>My name is {{name}} and I live at {{street}} in {{city}}, {{state}}</p>";
+  <script type="text/JavaScript">
+    const quoteInfo = document.getElementById("quoteTemplate").innerHTML;
+    const template = Handlebars.compile(quoteInfo);
 
-  // Generate a JS function that will create the output
-  var template = Handlebars.compile(myInfo);
+    Handlebars.registerHelper("makeLink", (text, url) => {
+        text = Handlebars.Utils.escapeExpression(text);
+        url = Handlebars.Utils.escapeExpression(url);
+        const linkElement = `<a href='${url}'>${text}</a>`;
+        return new Handlebars.SafeString(linkElement);
+    });
 
-  // template receives the key / value pairs and puts
-  // them in place
-  var data = template({name: "Gaby", street: "306 Wysteria Lane", city: "Fariview", state: "IL"});
+    Handlebars.registerHelper("changeColor", (text, {hash}) => {
+        text = Handlebars.Utils.escapeExpression(text);
+        return new Handlebars.SafeString(`<span class="${hash.color}Text">${text}</span>`);
+    });
 
-  // Update the div with the completed output
-  document.getElementById('gabyData').innerHTML += data;
+    Handlebars.registerHelper("sayHello", options => {
+        console.log(options);
+        switch (options.data.root.data.lang) {
+            case "italian":
+                return "Ciao";
+                break;
+            case "german":
+                return "Hallo!";
+                break;
+            case "austrian":
+                return "Grüß Gott";
+                break;
+            default:
+                return "Hi!";
+        }
+    })
+
+    const quoteData = template({
+        name: "Poppea",
+        quotes: [
+            {quote: "Signor, deh non partir"},
+            {quote: "Io son regina!"},
+            {quote: "Per me guereggia amor e la fortuna"},
+            {quote: "Pur ti miro"}
+        ],
+        poppeaBio: `<em>Poppea Sabina was the daughter of a prominant Roman Senator 
+            who was the consort of Ottone (Otho) and later the wife of Emperor Nerone (Nero)
+            and Empress of Rome</em>`,
+        data: {
+            lang: "italian"
+        }
+
+    });
+    document.getElementById("quoteData").innerHTML += quoteData;
   </script>
 
 </body>
