@@ -28,27 +28,33 @@
 
   <script id="template" type="text/x-handlebars-template">
 
-    <div class="lang-1">
-        <h3>{{language}}</h3>
-        {{#with geographicalData}}
-            <div class="country">{{{country}}}</div>
-            <div class="country">{{{continent}}}</div>
-        {{/with}}
-    </div>    
+    {{> myName}}
+
+    <div class="post">
+        {{> askQuestion tagName="h2"}}
+        <h2>Suggestions</h2>
+        {{#each comments}}
+            {{> askQuestion tagName="h3"}}
+        {{/each}}
+    </div>
   </script>
 
   <script type="text/JavaScript">
     const template = Handlebars.compile(document.getElementById("template").innerHTML);
 
-    Handlebars.registerHelper("with", (context, options) => options.fn(context));
+    Handlebars.registerPartial("myName", `{{name}}`);
+
+    Handlebars.registerPartial("askQuestion", `<{{tagName}}>{{book}}</{{tagName}}>
+        <div class="comment">{{comment}}</div>`);
 
     const templateData = template({
-        language: "Telagu",
-        geographicalData: {
-            country: "India",
-            family: "Dravidian",
-            continent: "Asia"
-        }
+        name: "Zalman",
+        book: "Dream of the Red Chamber",
+        comment: "Which is the best translation currently offered by a major publisher?",
+        comments: [
+            { book: "Mansfield Park", comment: "What does Madame de Stäl think about plays?" },
+            { book: "A Game of Thrones", comment: "When is the next one coming out?" }
+        ]
     });
     document.getElementById("contentDiv").innerHTML += templateData;
 
