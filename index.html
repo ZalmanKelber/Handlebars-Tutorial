@@ -28,57 +28,28 @@
 
   <script id="template" type="text/x-handlebars-template">
 
-    {{#makeRadio "size"}}
-        Small 
-        Medium 
-        Large
-    {{/makeRadio}}
-
-    {{#areEqual 1 2}}
-        Numbers are are equal
-    {{else}}
-        Numbers are not equal
-    {{/areEqual}}
-    <br />
-    <br />
-
-    {{#if "notActive"}}
-        <img src="https://media3.s-nbcnews.com/j/newscms/2019_33/2203981/171026-better-coffee-boost-se-329p_67dfb6820f7d3898b5486975903c2e51.fit-1240w.jpg" alt="active">
-    {{else}}
-        <img src="https://www.thetrendspotter.net/wp-content/uploads/2020/09/Best-tea-brands.jpg" alt="inactive">
-    {{/if}}
-    <br />
-    <br />
-    
+    <div class="lang-1">
+        <h3>{{language}}</h3>
+        {{#with geographicalData}}
+            <div class="country">{{{country}}}</div>
+            <div class="country">{{{continent}}}</div>
+        {{/with}}
+    </div>    
   </script>
 
   <script type="text/JavaScript">
     const template = Handlebars.compile(document.getElementById("template").innerHTML);
-    Handlebars.registerHelper("makeRadio", (name, options) => {
-        const radioList = options.fn().trim().split("\n");
-        let output = "";
-        radioList.forEach(val => {
-            const item = val.trim();
-            output += `<input type="radio" name="${name}" value="${item}">${item}<br />`;
-        });
-        return output;
-    });
 
-    Handlebars.registerHelper("areEqual", (num1, num2, options) => {
-        if (num1 === num2) {
-            return options.fn(this);
-        } 
-        return options.inverse(this);
-    });
+    Handlebars.registerHelper("with", (context, options) => options.fn(context));
 
-    Handlebars.registerHelper("if", (data, options) => {
-        if (data === "isActive") {
-            return options.fn(this);
+    const templateData = template({
+        language: "Telagu",
+        geographicalData: {
+            country: "India",
+            family: "Dravidian",
+            continent: "Asia"
         }
-        return options.inverse(this);
-    })
-
-    const templateData = template({});
+    });
     document.getElementById("contentDiv").innerHTML += templateData;
 
   </script>
