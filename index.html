@@ -12,6 +12,7 @@
 
   <!-- You can download Handlebars at http:// handlebarsjs.com/ and save it as handlebars-v4.0.2.js on your site. Then make it available by adding the following line. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+  <script src="groceries.js"></script>
 
   <!-- NodeJS is needed to precompile your templates so that your pages load faster. Install it by going to NodeJS.org and then type the following in your terminal to install Handlebars CLI : npm install -g handlebars-->
 
@@ -26,36 +27,21 @@
 <!-- The information will be placed in this div -->
   <div id="contentDiv"></div>
 
-  <script id="template" type="text/x-handlebars-template">
-
-    {{> myName}}
-
-    <div class="post">
-        {{> askQuestion tagName="h2"}}
-        <h2>Suggestions</h2>
-        {{#each comments}}
-            {{> askQuestion tagName="h3"}}
-        {{/each}}
-    </div>
-  </script>
-
   <script type="text/JavaScript">
-    const template = Handlebars.compile(document.getElementById("template").innerHTML);
-
-    Handlebars.registerPartial("myName", `{{name}}`);
-
-    Handlebars.registerPartial("askQuestion", `<{{tagName}}>{{book}}</{{tagName}}>
-        <div class="comment">{{comment}}</div>`);
-
-    const templateData = template({
-        name: "Zalman",
-        book: "Dream of the Red Chamber",
-        comment: "Which is the best translation currently offered by a major publisher?",
-        comments: [
-            { book: "Mansfield Park", comment: "What does Madame de Stäl think about plays?" },
-            { book: "A Game of Thrones", comment: "When is the next one coming out?" }
+    const template = Handlebars.templates["groceries"];
+    const context = {
+        groceries: [
+            {item: "Turmeric"},
+            {item: "Cinnamon"},
+            {item: "Cardammom"},
+            {item: "Lemongrass"},
+            {item: "Cumin"},
+            {item: "Ginger"},
+            {item: "Galanga"}
         ]
-    });
+    }
+
+    const templateData = template(context);
     document.getElementById("contentDiv").innerHTML += templateData;
 
   </script>
